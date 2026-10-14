@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TRADINGBOTFS</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
+body{background:#070a1e;color:#fff;overflow-x:hidden}
+.header{padding:14px 16px;display:flex;justify-content:space-between;align-items:center;background:#070a1e;border-bottom:1px solid #111a3a;position:sticky;top:0;z-index:20}
+.logo{font-weight:900;color:#f5d06a}
+.menu{width:40px;height:32px;background:linear-gradient(135deg,#7b61ff,#2ec4ff);border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.hero{max-width:500px;margin:0 auto;padding:14px;text-align:center}
+.chart-box{position:relative;width:100%;height:240px;background:#0a1028;border-radius:14px;overflow:hidden;border:1px solid #1a2a5a}
+#tv{width:100%;height:100%}
+.sell-buy{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);display:flex;gap:14px}
+.s-btn,.b-btn{padding:11px 22px;border-radius:10px;font-weight:900;border:none;transform:skewX(-12deg)}
+.s-btn span,.b-btn span{transform:skewX(12deg);display:flex;gap:5px;align-items:center}
+.s-btn{background:linear-gradient(135deg,#ff6a30,#ff2a1a);color:#fff}
+.b-btn{background:linear-gradient(135deg,#00ff88,#00e676);color:#000}
+.auth-row{display:flex;gap:10px;justify-content:center;margin:18px 0}
+.a-btn{padding:10px 24px;border-radius:20px;font-weight:800;border:none;cursor:pointer}
+.login-a{background:linear-gradient(135deg,#7b61ff,#2ec4ff);color:#fff}
+.reg-a{background:transparent;border:1px solid #5a6cff;color:#fff}
+.how{max-width:500px;margin:10px auto;padding:0 14px;text-align:left}
+.step-card{background:#0e1531;border-radius:12px;padding:16px;margin:12px 0;border:1px solid #1a2a5a;text-align:center}
+.hex{width:80px;height:80px;margin:0 auto 10px;background:#a8c6ff;clip-path:polygon(25% 0%,75% 0%,100% 50%,75% 100%,25% 100%,0% 50%);display:flex;align-items:center;justify-content:center;font-size:24px;color:#0e1531}
+#withdrawPop{position:fixed;bottom:70px;left:10px;background:#fff;color:#000;border-radius:8px;padding:10px 14px;box-shadow:0 4px 20px rgba(0,0,0,0.3);z-index:50;transform:translateX(-120%);transition:0.5s;max-width:260px;font-size:13px}
+#withdrawPop.show{transform:translateX(0)}
+#withdrawPop b{color:#00a651}
+
+.auth-page{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#070a1e;z-index:100;overflow:auto}
+.white-box{background:#fff;color:#000;min-height:100vh;padding:20px 16px;max-width:500px;margin:0 auto}
+.orange-btn{width:100%;padding:12px;background:#e67e00;color:#fff;border:none;border-radius:6px;font-weight:700;margin:6px 0;cursor:pointer}
+.form-input{width:100%;padding:12px 0;margin:8px 0;border:none;border-bottom:1px solid #ddd;background:transparent;outline:none}
+.form-select{width:100%;padding:12px 0;margin:8px 0;border:none;border-bottom:1px solid #ddd;background:transparent;color:#666}
+.login-now-btn{width:100%;padding:12px;background:#0a0f2a;color:#fff;border:none;border-radius:6px;font-weight:800;margin:8px 0;cursor:pointer}
+.reset-btn{width:100%;padding:12px;background:#c0392b;color:#fff;border:none;border-radius:6px;font-weight:800;margin:6px 0}
+
+/* DASHBOARDS */
+.dashboard{position:fixed;top:0;left:0;width:100%;height:100%;background:#f2f4f8;z-index:200;overflow:auto;color:#000;display:none}
+.dash-header{background:#070a1e;color:#fff;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:10}
+.dots-btn{width:36px;height:32px;background:transparent;border:1px solid #1a2a5a;border-radius:6px;color:#fff;font-size:20px;cursor:pointer}
+.dots-menu{position:absolute;top:50px;right:16px;background:#fff;color:#000;border-radius:8px;box-shadow:0 4px 20px rgba(0,0,0,0.2);display:none;flex-direction:column;min-width:160px;z-index:30}
+.dots-menu button{padding:12px 16px;border:none;background:transparent;text-align:left;cursor:pointer;border-bottom:1px solid #eee;font-size:14px}
+.dash-content{padding:16px;max-width:600px;margin:0 auto}
+.welcome-card{background:linear-gradient(135deg,#070a1e,#1a2a5a);color:#fff;border-radius:12px;padding:16px;margin-bottom:16px}
+.balance-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:14px 0}
+.bal-box{background:#fff;border-radius:10px;padding:12px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,0.08)}
+.bal-box h4{font-size:12px;color:#666}
+.bal-box p{font-size:16px;font-weight:900}
+.dash-btn{padding:12px;border-radius:8px;border:none;font-weight:800;cursor:pointer;width:100%;margin:5px 0}
+.admin-card{background:#fff;border-radius:10px;padding:12px;margin:8px 0;border:1px solid #ddd}
+.admin-card input{width:60px;padding:6px;margin:0 4px;border:1px solid #ccc;border-radius:4px}
+
+#chatBtn{position:fixed;bottom:14px;right:14px;width:56px;height:56px;background:#2e8bff;border-radius:50%;border:none;font-size:24px;color:#fff;z-index:60;cursor:pointer}
+#chatBox{position:fixed;bottom:80px;right:10px;width:320px;max-width:90vw;background:#fff;border-radius:14px;overflow:hidden;display:none;flex-direction:column;z-index:61;box-shadow:0 10px 40px rgba(0,0,0,0.4)}
+</style>
+</head>
+<body>
+
+<div class="header">
+<div class="logo">↗ TRADINGBOTFS</div>
+<div class="menu" onclick="location.reload()">≡</div>
+</div>
+
+<div class="hero">
+<div class="chart-box"><div id="tv"></div>
+<div class="sell-buy">
+<button class="s-btn"><span>◷ SELL</span></button>
+<button class="b-btn"><span>◷ BUY</span></button>
+</div>
+</div>
+<h2 style="margin-top:18px"><span style="color:#2ec4ff">TradingBotFS</span><br>Build your future with Investments.</h2>
+<div class="auth-row">
+<button class="a-btn login-a" onclick="openLogin()">LOGIN</button>
+<button class="a-btn reg-a" onclick="openRegister()">REGISTER</button>
+</div>
+</div>
+
+<div class="how">
+<h2>How It Works</h2>
+<div class="step-card"><div class="hex">✋</div><h3>Create Account</h3><p style="font-size:13px;color:#94a3b8">Creating an account is free and painless.</p></div>
+<div class="step-card"><div class="hex">☀</div><h3>Create New Deposit</h3><p style="font-size:13px;color:#94a3b8">Make deposits on plans available.</p></div>
+<div class="step-card"><div class="hex">📊</div><h3>Start Earning</h3><p style="font-size:13px;color:#94a3b8">Start earning ROI by percentage of plans.</p></div>
+</div>
+
+<div id="withdrawPop"><div><div id="popText">Someone from South Africa has withdrawn</div><b id="popAmt">$3,000</b></div></div>
+<button id="chatBtn" onclick="toggleChat()">💬</button>
+<div id="chatBox"><div style="background:#2e5bff;color:#fff;padding:12px;display:flex;justify-content:space-between"><b>How can we help?</b><span onclick="toggleChat()" style="cursor:pointer">✕</span></div><div style="padding:14px;background:#f7f8fc;color:#333;font-size:13px">Hello, first time here? Feel free to reach out.</div></div>
+
+<div id="loginPage" class="auth-page"><div class="white-box">
+<p style="text-align:center;font-size:13px">The TradingBotFS Investment Platform.<br><b>INVEST and Start EARNING</b></p>
+<button class="orange-btn" onclick="closeAll()">🏠 Back To Homepage</button>
+<button class="orange-btn" onclick="openRegister()">Register Now</button>
+<h2 style="text-align:center;margin:20px 0 4px">Login to your account</h2>
+<input id="logEmail" class="form-input" placeholder="Email address">
+<input id="logPass" type="password" class="form-input" placeholder="Password">
+<button class="login-now-btn" onclick="doLogin()">Login Now</button>
+<button class="reset-btn">Reset Password</button>
+<p style="font-size:11px;color:#666;margin-top:10px">Admin: Davidjohn70010@gmail.com / Admin@12345</p>
+</div></div>
+
+<div id="registerPage" class="auth-page"><div class="white-box">
+<p style="text-align:center;font-size:13px">The TradingBotFS Investment Platform.<br><b>INVEST and Start EARNING</b></p>
+<button class="orange-btn" onclick="closeAll()">🏠 Back To Homepage</button>
+<button class="orange-btn" onclick="openLogin()">Login Now</button>
+<h2 style="text-align:center;color:#e67e00;margin:16px 0">Sign up for free!</h2>
+<input id="regFull" class="form-input" placeholder="Full name">
+<input id="regEmail" class="form-input" placeholder="Email address">
+<input id="regMobile" class="form-input" placeholder="Mobile Number">
+<select id="regCountry" class="form-select"><option>Select Country</option><option>Nigeria</option><option>USA</option><option>UK</option><option>Canada</option><option>Australia</option><option>South Africa</option><option>Germany</option><option>Dubai</option><option>Brazil</option><option>Austria</option></select>
+<select id="regCurrency" class="form-select"><option>Select Currency</option><option>USD</option><option>EUR</option><option>GBP</option><option>NGN</option></select>
+<input id="regOccup" class="form-input" placeholder="Occupation">
+<input id="regPass" type="password" class="form-input" placeholder="Password">
+<input id="regPass2" type="password" class="form-input" placeholder="Confirm Password">
+<div style="font-size:12px;margin:10px 0"><input type="checkbox" id="agree"> I agree to privacy policy and terms</div>
+<button class="orange-btn" onclick="doRegister()">Sign Up Now</button>
+</div></div>
+
+<!-- CLIENT DASHBOARD - $0.00 -->
+<div id="clientDashboard" class="dashboard">
+<div class="dash-header"><div style="color:#f5d06a;font-weight:900">↗ TRADINGBOTFS</div>
+<div style="position:relative"><button class="dots-btn" onclick="toggleDots('clientDots')">⋮</button><div id="clientDots" class="dots-menu"><button onclick="alert('Withdraw - Balance $0.00')">💸 Withdraw</button><button onclick="toggleChatDash('chatClient');toggleDots('clientDots')">💬 Live Chat</button><button onclick="doLogout()">🚪 Logout</button></div></div></div>
+<div class="dash-content">
+<div class="welcome-card"><p style="font-size:13px;opacity:0.8">Welcome</p><h3 id="cName">User</h3><p style="font-size:12px;opacity:0.7" id="cEmail">email</p></div>
+<div class="balance-grid"><div class="bal-box"><h4>Balance</h4><p id="cBalance">$0.00</p></div><div class="bal-box"><h4>Capital</h4><p id="cCapital">$0.00</p></div><div class="bal-box"><h4>Profit</h4><p id="cProfit" style="color:#00a651">$0.00</p></div></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><button class="dash-btn" style="background:#00a651;color:#fff" onclick="alert('Contact admin to deposit')">Deposit</button><button class="dash-btn" style="background:#e67e00;color:#fff" onclick="alert('No funds - $0.00')">Withdraw</button></div>
+<h3 style="margin:20px 0 10px">Investment Plans</h3>
+<div class="admin-card"><h4>Starter - $100</h4><p style="font-size:12px;color:#666">ROI: 5% daily</p><button class="orange-btn" onclick="alert('Please deposit first - $0.00')">Invest Now</button></div>
+<div class="admin-card"><h4>Standard - $500</h4><p style="font-size:12px;color:#666">ROI: 7% daily</p><button class="orange-btn" onclick="alert('Please deposit first - $0.00')">Invest Now</button></div>
+<p style="font-size:12px;color:#666;text-align:center;margin-top:20px">All balances start at $0.00 until deposit.</p>
+</div>
+<button style="position:fixed;bottom:14px;right:14px;width:56px;height:56px;background:#2e8bff;border-radius:50%;border:none;font-size:24px;color:#fff" onclick="toggleChatDash('chatClient')">💬</button>
+<div id="chatClient" style="position:fixed;bottom:80px;right:10px;width:320px;max-width:90vw;background:#fff;border-radius:14px;overflow:hidden;display:none;flex-direction:column;z-index:61;box-shadow:0 10px 40px rgba(0,0,0,0.4)"><div style="background:#2e5bff;color:#fff;padding:12px;display:flex;justify-content:space-between"><b>Live Chat</b><span onclick="toggleChatDash('chatClient')" style="cursor:pointer">✕</span></div><div style="padding:14px;background:#f7f8fc;color:#333;font-size:13px">Hello! Balance $0.00 - deposit to start earning.</div></div>
+</div>
+
+<!-- ADMIN DASHBOARD - FOR YOU -->
+<div id="adminDashboard" class="dashboard" style="background:#f2f4f8">
+<div class="dash-header"><div style="color:#f5d06a;font-weight:900">↗ ADMIN PANEL</div>
+<div style="position:relative"><button class="dots-btn" onclick="toggleDots('adminDots')">⋮</button><div id="adminDots" class="dots-menu"><button onclick="doLogout()">🚪 Logout Admin</button></div></div></div>
+<div class="dash-content">
+<div class="welcome-card"><h3>Admin David</h3><p style="font-size:12px;opacity:0.8">Davidjohn70010@gmail.com - Administrator</p><p style="font-size:12px;margin-top:8px">Total Clients: <b id="totalUsers">0</b></p></div>
+<h3>All Registered Clients</h3>
+<div id="usersList"></div>
+<button class="dash-btn" style="background:#0a0f2a;color:#fff;margin-top:20px" onclick="clearAllUsers()">Clear All Clients (Reset)</button>
+</div>
+</div>
+
+<script src="https://s3.tradingview.com/tv.js"></script>
+<script>
+new TradingView.widget({"autosize":true,"symbol":"BINANCE:BTCUSDT","interval":"5","theme":"dark","style":"1","locale":"en","container_id":"tv"});
+function openLogin(){document.getElementById('loginPage').style.display='block';document.getElementById('registerPage').style.display='none'}
+function openRegister(){document.getElementById('registerPage').style.display='block';document.getElementById('loginPage').style.display='none'}
+function closeAll(){document.getElementById('loginPage').style.display='none';document.getElementById('registerPage').style.display='none'}
+function toggleChat(){let b=document.getElementById('chatBox');b.style.display=b.style.display=='flex'?'none':'flex'}
+function toggleChatDash(id){let b=document.getElementById(id);b.style.display=b.style.display=='flex'?'none':'flex'}
+function toggleDots(id){let m=document.getElementById(id);m.style.display=m.style.display=='flex'?'none':'flex'}
+
+function doRegister(){
+let f=regFull.value,e=regEmail.value,m=regMobile.value,c=regCountry.value,cur=regCurrency.value,o=regOccup.value,p=regPass.value,p2=regPass2.value;
+if(!f||!e||!m||c=='Select Country'||cur=='Select Currency'||!o||!p){alert('Please fill all fields');return}
+if(p!=p2){alert('Passwords do not match');return}
+if(!document.getElementById('agree').checked){alert('Please agree to terms');return}
+if(e=='Davidjohn70010@gmail.com'){alert('Admin email cannot be registered as client. Use Login.');return}
+let users=JSON.parse(localStorage.getItem('users')||'[]');
+if(users.find(u=>u.email==e)){alert('Email exists, please login');openLogin();return}
+users.push({full:f,email:e,mobile:m,country:c,currency:cur,occ:o,pass:p,balance:0,capital:0,profit:0});
+localStorage.setItem('users',JSON.stringify(users));
+alert('Account created! Balance $0.00 - Please login');
+openLogin();
+}
+
+function doLogin(){
+let e=logEmail.value.trim(),p=logPass.value.trim();
+// ADMIN LOGIN - GO TO ADMIN DASHBOARD
+if(e=='Davidjohn70010@gmail.com'&&p=='Admin@12345'){
+document.getElementById('loginPage').style.display='none';
+document.getElementById('adminDashboard').style.display='block';
+loadAdminData();
+return
+}
+// CLIENT LOGIN - GO TO CLIENT DASHBOARD WITH ZERO
+let users=JSON.parse(localStorage.getItem('users')||'[]');
+let found=users.find(u=>u.email==e&&u.pass==p);
+if(found){
+localStorage.setItem('currentUser',JSON.stringify(found));
+document.getElementById('cName').innerText=found.full;
+document.getElementById('cEmail').innerText=found.email;
+document.getElementById('cBalance').innerText='$'+(found.balance||0)+'.00';
+document.getElementById('cCapital').innerText='$'+(found.capital||0)+'.00';
+document.getElementById('cProfit').innerText='$'+(found.profit||0)+'.00';
+document.getElementById('loginPage').style.display='none';
+document.getElementById('clientDashboard').style.display='block';
+}else{alert('Invalid email or password. If admin, use Davidjohn70010@gmail.com / Admin@12345');}
+}
+
+function loadAdminData(){
+let users=JSON.parse(localStorage.getItem('users')||'[]');
+document.getElementById('totalUsers').innerText=users.length;
+let list=document.getElementById('usersList');
+if(users.length==0){list.innerHTML='<p style="background:#fff;padding:14px;border-radius:8px;margin:10px 0">No clients yet. Clients will appear here after they register.</p>';return}
+list.innerHTML='';
+users.forEach((u,i)=>{
+let div=document.createElement('div');
+div.className='admin-card';
+div.innerHTML=`<b>${u.full}</b><br><span style="font-size:12px">${u.email} | ${u.mobile} | ${u.country}</span><br>
+<div style="margin-top:8px;display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+Balance: <input id="b${i}" value="${u.balance||0}">
+Capital: <input id="ca${i}" value="${u.capital||0}">
+Profit: <input id="p${i}" value="${u.profit||0}">
+<button onclick="saveUser(${i})" style="padding:6px 10px;background:#00a651;color:#fff;border:none;border-radius:4px;cursor:pointer">Save</button>
+<button onclick="deleteUser(${i})" style="padding:6px 10px;background:#c0392b;color:#fff;border:none;border-radius:4px;cursor:pointer">Delete</button>
+</div>`;
+list.appendChild(div);
+});
+}
+function saveUser(i){
+let users=JSON.parse(localStorage.getItem('users')||'[]');
+users[i].balance=parseFloat(document.getElementById('b'+i).value)||0;
+users[i].capital=parseFloat(document.getElementById('ca'+i).value)||0;
+users[i].profit=parseFloat(document.getElementById('p'+i).value)||0;
+localStorage.setItem('users',JSON.stringify(users));
+alert('Saved! Client will see new balance on next login: Balance $'+users[i].balance+' Capital $'+users[i].capital+' Profit $'+users[i].profit);
+}
+function deleteUser(i){
+if(!confirm('Delete this client?'))return;
+let users=JSON.parse(localStorage.getItem('users')||'[]');
+users.splice(i,1);
+localStorage.setItem('users',JSON.stringify(users));
+loadAdminData();
+}
+function clearAllUsers(){if(confirm('Clear all clients?')){localStorage.removeItem('users');loadAdminData()}}
+function doLogout(){localStorage.removeItem('currentUser');document.getElementById('clientDashboard').style.display='none';document.getElementById('adminDashboard').style.display='none';location.reload()}
+
+let withdrawals=[{country:'South Africa',amount:'$3,000'},{country:'Austria',amount:'$600'},{country:'Dubai',amount:'$1,200'},{country:'Brazil',amount:'$850'},{country:'Australia',amount:'$600'}];
+let idx=0;
+function showPop(){let w=withdrawals[idx];document.getElementById('popText').innerText='Someone from '+w.country+' has withdrawn';document.getElementById('popAmt').innerText=w.amount;document.getElementById('withdrawPop').classList.add('show');setTimeout(()=>{document.getElementById('withdrawPop').classList.remove('show')},4000);idx=(idx+1)%withdrawals.length}
+setTimeout(showPop,2500);setInterval(showPop,6000);
+</script>
+</body>
+</html>
