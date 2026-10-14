@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TRADINGBOTFS</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
+body{background:#070b1e;color:#fff;overflow-x:hidden}
+.header{padding:18px 20px;display:flex;justify-content:space-between;align-items:center}
+.logo{display:flex;align-items:center;gap:8px;font-weight:800;letter-spacing:1px;color:#f5d56e}
+.logo-icon{width:32px;height:32px;background:#00e676;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#000;font-weight:900}
+.menu{width:42px;height:36px;background:linear-gradient(135deg,#7c4dff,#00bcd4);border-radius:8px;display:flex;align-items:center;justify-content:center}
+.bg-dots{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;background-image:radial-gradient(#1a2450 1px, transparent 1px);background-size:40px 40px;opacity:0.5}
+.hero{position:relative;padding:10px 18px 30px;text-align:center;max-width:600px;margin:0 auto}
+.chart-box{position:relative;width:100%;height:220px;background:#0a0f2a;border-radius:16px;overflow:hidden;border:1px solid #1a2450;margin:15px 0;box-shadow:0 0 30px rgba(0,0,0,0.5)}
+#tvchart{width:100%;height:100%}
+.sell-buy{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);display:flex;gap:18px;z-index:2}
+.pill{padding:12px 28px;border-radius:30px;font-weight:900;border:none;font-size:14px;letter-spacing:1px;display:flex;align-items:center;gap:6px}
+.sell-pill{background:#ff3b30;color:#fff;box-shadow:0 4px 15px rgba(255,59,48,0.4)}
+.buy-pill{background:#00e676;color:#000;box-shadow:0 4px 15px rgba(0,230,118,0.4)}
+.title{margin-top:25px}
+.title b{color:#2ec4ff;font-size:22px;display:block}
+.title h1{font-size:26px;line-height:1.2;margin:8px 0;font-weight:800}
+.subtitle{font-size:15px;font-weight:600;margin:15px 0;line-height:1.4}
+.desc{font-size:14px;color:#cbd5e1;margin:18px 0}
+.desc span{color:#2ec4ff}
+.auth-btns{display:flex;gap:14px;justify-content:center;margin:24px 0}
+.btn-auth{padding:12px 30px;border-radius:25px;font-weight:700;font-size:14px;border:none;cursor:pointer}
+.login-btn{background:linear-gradient(135deg,#7c4dff,#2196f3);color:#fff}
+.reg-btn{background:transparent;color:#fff;border:1px solid #7c4dff}
+.how{padding:20px;text-align:left}
+.how h2{font-size:20px;margin-bottom:15px}
+.card{background:#0f1733;border:1px solid #1a2450;border-radius:12px;padding:16px;margin:10px 0}
+.auth-box{max-width:400px;margin:20px auto;background:#0f1733;border:1px solid #1a2450;border-radius:14px;padding:20px;display:none}
+.auth-box input{width:100%;padding:12px;margin:8px 0;background:#070b1e;border:1px solid #1a2450;border-radius:8px;color:#fff}
+#chatBtn{position:fixed;bottom:18px;right:18px;width:58px;height:58px;background:#00e676;border-radius:50%;border:none;font-size:24px;z-index:50}
+#chatBox{position:fixed;bottom:85px;right:15px;width:320px;height:380px;background:#0f172a;border:1px solid #1e2f4a;border-radius:14px;display:none;flex-direction:column;z-index:50;overflow:hidden}
+#chatM{flex:1;padding:10px;overflow:auto;display:flex;flex-direction:column;gap:6px;background:#070b1e}
+.msg{padding:8px 10px;border-radius:10px;max-width:80%;font-size:13px} .u{background:#00e676;color:#000;align-self:flex-end} .a{background:#1e2f4a;color:#fff;align-self:flex-start}
+#chatIn{display:flex;padding:8px;background:#0f1733;gap:6px}
+#chatIn input{flex:1;padding:8px;border-radius:6px;border:1px solid #1e2f4a;background:#070b1e;color:#fff}
+</style>
+</head>
+<body>
+<div class="bg-dots"></div>
+<div class="header">
+<div class="logo"><div class="logo-icon">T</div> TRADINGBOTFS</div>
+<div class="menu">≡</div>
+</div>
+
+<div class="hero">
+<div class="chart-box">
+<div id="tvchart"></div>
+<div class="sell-buy">
+<button class="pill sell-pill" onclick="trade('SELL')">◷ SELL</button>
+<button class="pill buy-pill" onclick="trade('BUY')">◷ BUY</button>
+</div>
+</div>
+
+<div class="title">
+<b>TradingBotFS</b>
+<h1>Build your future with Investments.</h1>
+</div>
+
+<p class="subtitle">Discover the power of earning in an increasing cryptocurrency ecosystem.</p>
+
+<p class="desc">Check Out The Benefits of Joining and <span>●</span><br><span>●</span> Investing with Us!!</p>
+
+<div class="auth-btns">
+<button class="btn-auth login-btn" onclick="showAuth('login')">LOGIN</button>
+<button class="btn-auth reg-btn" onclick="showAuth('reg')">REGISTER</button>
+</div>
+
+<div class="auth-box" id="authBox">
+<h3 id="authTitle" style="text-align:center">Login</h3>
+<p style="font-size:11px;color:#94a3b8;text-align:center;margin:6px 0">Admin: Davidjohn70010@gmail.com / Admin@12345</p>
+<input id="em" placeholder="Email">
+<input id="pw" type="password" placeholder="Password">
+<button class="btn-auth login-btn" style="width:100%;margin-top:8px" onclick="doLogin()">Continue</button>
+<div id="adminP" style="display:none;margin-top:15px;border-top:1px solid #1a2450;padding-top:10px">
+<h4>Admin - Set Capital & Reply Chat</h4>
+<input id="capSet" placeholder="Capital e.g 1000"><input id="profSet" placeholder="Profit % e.g 3.2">
+<button class="btn-auth login-btn" style="width:100%" onclick="alert('Saved!')">Save</button>
+<div id="adminChats" style="max-height:120px;overflow:auto;background:#070b1e;margin-top:10px;padding:6px;border-radius:6px;font-size:12px"></div>
+<input id="adminReply" placeholder="Reply..." style="width:100%;padding:8px;margin-top:6px;background:#070b1e;border:1px solid #1a2450;border-radius:6px;color:#fff"><button class="btn-auth login-btn" style="width:100%;margin-top:4px" onclick="adminSend()">Send Reply</button>
+</div>
+</div>
+
+<div class="how">
+<h2>How It Works</h2>
+<div class="card"><b>01 • Create Account</b><br><span style="color:#94a3b8;font-size:13px">Register in 20 sec, get $1000 bonus</span></div>
+<div class="card"><b>02 • Activate AI Bot</b><br><span style="color:#94a3b8;font-size:13px">Bot trades 24/7 automatically</span></div>
+<div class="card"><b>03 • Withdraw Profit</b><br><span style="color:#94a3b8;font-size:13px">Daily profit, min withdraw $10</span></div>
+</div>
+</div>
+
+<button id="chatBtn" onclick="toggleChat()">💬</button>
+<div id="chatBox">
+<div style="padding:12px;background:#0f1733;display:flex;justify-content:space-between"><b>Support</b><span onclick="toggleChat()" style="cursor:pointer">✕</span></div>
+<div id="chatM"><div class="msg a">Hello! Welcome to TRADINGBOTFS 👋</div></div>
+<div id="chatIn"><input id="chatT" placeholder="Message..."><button onclick="sendMsg()" style="background:#00e676;border:none;padding:8px 12px;border-radius:6px;font-weight:700">Send</button></div>
+</div>
+
+<script src="https://s3.tradingview.com/tv.js"></script>
+<script>
+new TradingView.widget({"autosize":true,"symbol":"BINANCE:BTCUSDT","interval":"1","timezone":"Etc/UTC","theme":"dark","style":"1","locale":"en","container_id":"tvchart"});
+let chats=JSON.parse(localStorage.getItem('tfs2')||'[]');
+function showAuth(t){document.getElementById('authBox').style.display='block';document.getElementById('authTitle').innerText=t==='login'?'LOGIN':'REGISTER';document.getElementById('authBox').scrollIntoView({behavior:'smooth'})}
+function doLogin(){let e=em.value,p=pw.value;if(e==='Davidjohn70010@gmail.com'&&p==='Admin@12345'){adminP.style.display='block';renderAdmin();alert('Admin login - you can set capital & reply chat')}else if(e
