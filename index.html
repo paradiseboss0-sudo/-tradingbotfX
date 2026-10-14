@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TRADINGBOTFS - AI Investments</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+body{background:#080c14;color:#e2e8f0;line-height:1.6}
+.header{position:sticky;top:0;z-index:50;background:rgba(8,12,20,0.96);border-bottom:1px solid #1e2f4a;padding:12px 20px;display:flex;justify-content:space-between;align-items:center}
+.logo{display:flex;align-items:center;gap:10px;font-weight:900;font-size:22px;color:#00e676}
+.logo-box{width:36px;height:36px;background:linear-gradient(135deg,#00e676,#00c853);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#000;font-weight:900;font-size:18px}
+.btn{padding:11px 20px;border-radius:8px;font-weight:700;border:none;cursor:pointer;text-decoration:none;display:inline-block}
+.btn-green{background:#00e676;color:#000} .btn-outline{background:#111d33;border:1px solid #1e2f4a;color:#fff}
+.hero{max-width:1200px;margin:0 auto;padding:40px 20px;display:grid;gap:30px} @media(min-width:900px){.hero{grid-template-columns:1.1fr 0.9fr}}
+.hero h1{font-size:34px;font-weight:900;line-height:1.1} .hero h1 em{color:#00e676;font-style:normal} @media(min-width:600px){.hero h1{font-size:48px}}
+.muted{color:#94a3b8}
+.card{background:#111d33;border:1px solid #1e2f4a;border-radius:14px;padding:20px}
+.trading-card{background:#111d33;border:1px solid #1e2f4a;border-radius:16px;padding:16px}
+.tv{height:330px;border-radius:12px;overflow:hidden;background:#000}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+.act{padding:16px;border-radius:12px;font-weight:800;border:none} .sell{background:#ff3b4a;color:#fff} .buy{background:#00e676;color:#000}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+.stat{background:#0a1223;border:1px solid #1e2f4a;padding:12px;border-radius:10px;text-align:center} .stat b{color:#00e676;display:block;font-size:18px}
+.section{max-width:1200px;margin:0 auto;padding:50px 20px}
+.badge{background:rgba(0,230,118,0.12);color:#00e676;padding:6px 12px;border-radius:20px;font-size:12px;font-weight:700;display:inline-block;margin-bottom:10px}
+.plans{display:grid;gap:18px;margin-top:20px} @media(min-width:800px){.plans{grid-template-columns:repeat(3,1fr)}}
+.plan{border:1px solid #1e2f4a;border-radius:16px;padding:24px;background:#111d33} .plan.pop{border-color:#00e676}
+.price{font-size:30px;font-weight:900;color:#00e676}
+.auth{max-width:430px;margin:30px auto;background:#111d33;border:1px solid #1e2f4a;border-radius:16px;padding:26px}
+.auth input{width:100%;padding:12px;margin:8px 0;background:#080c14;border:1px solid #1e2f4a;border-radius:8px;color:#fff}
+.footer{background:#05080f;border-top:1px solid #1e2f4a;padding:40px 20px;text-align:center;color:#64748b;font-size:13px}
+#chatBtn{position:fixed;bottom:20px;right:20px;width:60px;height:60px;background:#00e676;border-radius:50%;border:none;font-size:26px;cursor:pointer;z-index:100;box-shadow:0 4px 20px rgba(0,230,118,0.4)}
+#chatBox{position:fixed;bottom:90px;right:20px;width:340px;max-width:90vw;height:420px;background:#0f172a;border:1px solid #1e2f4a;border-radius:16px;display:none;flex-direction:column;z-index:100;overflow:hidden}
+#chatHeader{background:#111d33;padding:14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #1e2f4a}
+#chatMessages{flex:1;padding:12px;overflow:auto;display:flex;flex-direction:column;gap:8px;background:#080c14}
+.msg{padding:8px 12px;border-radius:12px;max-width:80%;font-size:14px} .msg.user{background:#00e676;color:#000;align-self:flex-end} .msg.admin{background:#1e2f4a;color:#fff;align-self:flex-start}
+#chatInput{display:flex;padding:10px;background:#111d33;border-top:1px solid #1e2f4a;gap:8px}
+#chatInput input{flex:1;padding:10px;border-radius:8px;border:1px solid #1e2f4a;background:#080c14;color:#fff}
+#chatInput button{background:#00e676;color:#000;border:none;padding:10px 14px;border-radius:8px;font-weight:700}
+</style>
+</head>
+<body>
+<div class="header">
+<div class="logo"><div class="logo-box">T</div>TRADING<span style="color:#fff">BOTFS</span></div>
+<div style="display:flex;gap:8px"><a class="btn btn-outline" href="#login">Login</a><a class="btn btn-green" href="#login">Register</a></div>
+</div>
+
+<div class="hero">
+<div>
+<div class="badge">AI QUANT TRADING • 47,892 TRADERS</div>
+<h1>Build Your Future With <em>AI Investments</em></h1>
+<p class="muted">TRADINGBOTFS uses advanced AI bots to trade 24/7. 1.8% - 4.5% daily profit. Join investors growing capital automatically.</p>
+<div style="display:flex;gap:10px;margin:14px 0"><a class="btn btn-green" href="#login">Start Trading →</a><a class="btn btn-outline" href="#plans">View Plans</a></div>
+<div class="card" style="display:flex;gap:18px;text-align:center"><div style="flex:1"><b style="font-size:20px">47k+</b><br><span class="muted" style="font-size:11px">Active</span></div><div style="flex:1"><b style="font-size:20px">$18.4M</b><br><span class="muted" style="font-size:11px">Paid</span></div><div style="flex:1"><b style="font-size:20px">98.7%</b><br><span class="muted" style="font-size:11px">Win Rate</span></div></div>
+</div>
+<div>
+<div class="trading-card">
+<div style="display:flex;justify-content:space-between;margin-bottom:8px"><b>BTC/USDT - Live AI</b><span style="color:#00e676;font-size:11px">● BOT ACTIVE</span></div>
+<div class="tv" id="tvchart"></div>
+<div class="actions"><button class="act sell" onclick="trade('SELL')">SELL ↓</button><button class="act buy" onclick="trade('BUY')">BUY ↑</button></div>
+<div class="stats-grid"><div class="stat"><span class="muted">Capital</span><b id="cap">$1,000.00</b></div><div class="stat"><span class="muted">Profit Today</span><b id="prof">+$47.32</b></div></div>
+</div>
+</div>
+</div>
+
+<div class="section" id="plans">
+<div class="badge">INVESTMENT PLANS</div>
+<h2>Choose Your Growth Plan</h2>
+<div class="plans">
+<div class="plan"><h3>Starter</h3><div class="price">$100</div><p class="muted">1.8% Daily • $100 → $154</p><button class="btn btn-outline" style="width:100%;margin-top:12px" onclick="goLogin()">Choose Starter</button></div>
+<div class="plan pop"><h3>Professional ★ Popular</h3><div class="price">$1,000</div><p class="muted">3.2% Daily • $1,000 → $2,440</p><button class="btn btn-green" style="width:100%;margin-top:12px" onclick="goLogin()">Choose Pro</button></div>
+<div class="plan"><h3>Enterprise</h3><div class="price">$10,000</div><p class="muted">4.5% Daily • $10k → $37k</p><button class="btn btn-outline" style="width:100%;margin-top:12px" onclick="goLogin()">Choose Enterprise</button></div>
+</div>
+</div>
+
+<div class="section" id="login">
+<div class="auth">
+<h3 style="text-align:center">Login to TRADINGBOTFS</h3>
+<p class="muted" style="text-align:center;font-size:12px">Admin: Davidjohn70010@gmail.com / Admin@12345</p>
+<input id="em" placeholder="Email"><input id="pw" type="password" placeholder="Password">
+<button class="btn btn-green" style="width:100%;margin-top:8px" onclick="login()">LOGIN & START</button>
+<button class="btn btn-outline" style="width:100%;margin-top:8px" onclick="login()">CREATE ACCOUNT - $1000 BONUS</button>
+<div id="adminPanel" style="display:none;margin-top:20px;border-top:1px solid #1e2f4a;padding-top:14px">
+<h4>Admin Panel - Control + Live Chat Reply</h4>
+<input id="userCap" placeholder="Set User Capital e.g 1000"><input id="profitRate" placeholder="Set Profit % e.g 3.2">
+<button class="btn btn-green" style="width:100%;margin:6px 0" onclick="alert('Saved! New users get $'+userCap.value+' with '+profitRate.value+'%')">Save Settings</button>
+<h4 style="margin-top:14px">Live Chats</h4>
+<div id="adminChats" style="max-height:180px;overflow:auto;background:#080c14;padding:8px;border-radius:8px"></div>
+<div style="display:flex;gap:6px;margin-top:8px"><input id="adminReply" placeholder="Reply to user..." style="flex:1;padding:10px;border-radius:8px;border:1px solid #1e2f4a;background:#080c14;color:#fff"><button class="btn btn-green" onclick="adminSend()">Send</button></div>
+</div>
+</div>
+</div>
+
+<div class="footer"><b style="color:#fff">TRADINGBOTFS</b><br>Support via Live Chat • support@tradingbotfs.com<br><br>© 2026 TRADINGBOTFS</div>
+
+<button id="chatBtn" onclick="toggleChat()">💬</button>
+<div id="chatBox">
+<div id="chatHeader"><div><b>Support</b><br><span style="font-size:11px;color:#00e676">● Online</span></div><span onclick="toggleChat()" style="cursor:pointer">✕</span></div>
+<div id="chatMessages"><div class="msg admin">Hello! Welcome to TRADINGBOTFS 👋 How can we help?</div></div>
+<div id="chatInput"><input id="chatText" placeholder="Type message..."><button onclick="sendMsg()">Send</button></div>
+</div>
+
+<script src="https://s3.tradingview.com/tv.js"></script>
+<script>
+new TradingView.widget({"autosize":true,"symbol":"BINANCE:BTCUSDT","interval":"1","timezone":"Etc/UTC","theme":"dark","style":"1","locale":"en","container_id":"tvchart"});
+let chats=JSON.parse(localStorage.getItem('tfs_chats')||'[]');
+function toggleChat(){let b=document.getElementById('chatBox');b.style.display=b.style.display==='flex'?'none':'flex';renderAdminChats()}
+function sendMsg(){let t=document.getElementById('chatText');if(!t.value)return;let m={user:true,text:t.value,time:Date.now()};chats.push(m);localStorage.setItem('tfs_chats',JSON.stringify(chats));addMsg(m);t.value='';setTimeout(()=>{let r={user:false,text:'Thanks! Admin will reply soon. Bot active ✅',time:Date.now()};chats.push(r);localStorage.setItem('tfs_chats',JSON.stringify(chats));addMsg(r);renderAdminChats()},800);renderAdminChats()}
+function addMsg(m){let d=document.createElement('div');d.className='msg '+(m.user?'user':'admin');d.textContent=m.text;document.getElementById('chatMessages').appendChild(d);document.getElementById('chatMessages').scrollTop=9999}
+function renderAdminChats(){let box=document.getElementById('adminChats');if(!box)return;box.innerHTML='';chats.forEach(c=>{let div=document.createElement('div');div.style.padding='6px';div.style.borderBottom='1px solid #1e2f4a';div.innerHTML='<b>'+(c.user?'User':'Admin')+':</b> '+c.text;box.appendChild(div)})}
+function adminSend(){let i=document.getElementById('adminReply');if(!i.value)return;let m={user:false,text:i.value,time:Date.now()};chats.push(m);localStorage.setItem('tfs_chats',JSON.stringify(chats));addMsg(m);i.value='';renderAdminChats()}
+function trade(s){let p=(Math.random()*12+2).toFixed(2);document.getElementById('prof').innerHTML='+ $'+p;alert(s+' Executed! Profit +$'+p)}
+function goLogin(){document.getElementById('login').scrollIntoView({behavior:'smooth'})}
+function login(){let e=document.getElementById('em').value,p=document.getElementById('pw').value;if(e==='Davidjohn70010@gmail.com'&&p==='Admin@12345'){document.getElementById('adminPanel').style.display='block';renderAdminChats();alert('Admin Granted - See Live Chat below')}else if(e){alert('Welcome! $1000 bonus, Bot activated!')}else alert('Enter email')}
+(function(){chats.forEach(addMsg)})();
+</script>
+</body>
+</html>
