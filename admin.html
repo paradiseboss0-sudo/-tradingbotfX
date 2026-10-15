@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TradingbotFX - SUPER ADMIN</title>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
+body{background:#0f172a;color:#fff;padding:15px}
+h1{background:linear-gradient(90deg,#00ff88,#00aaff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-size:24px;text-align:center;margin:10px 0}
+.card{background:#1e293b;border-radius:12px;padding:15px;margin:12px 0;border:1px solid #334155}
+.card h3{color:#00ff88;margin-bottom:10px}
+input,select,textarea{width:100%;padding:10px;margin:6px 0;border-radius:8px;border:1px solid #475569;background:#0f172a;color:#fff}
+button{padding:10px 18px;border:none;border-radius:8px;font-weight:bold;cursor:pointer;margin:5px 2px}
+.btn-save{background:#00ff88;color:#000}
+.btn-chat{background:#3b82f6;color:#fff}
+table{width:100%;border-collapse:collapse}
+th,td{padding:8px;border:1px solid #334155;font-size:13px}
+th{background:#1e293b;color:#00ff88}
+.live-dot{display:inline-block;width:8px;height:8px;background:#00ff88;border-radius:50%}
+</style>
+</head>
+<body>
+<h1>TradingbotFX SUPER ADMIN <span class="live-dot"></span> LIVE - tradingbotfx-8646f</h1>
+<div style="text-align:center;color:#94a3b8;font-size:12px">✅ Connected - Chrome/Safari/Telegram will now see SAME clients</div>
+
+<div class="card">
+<h3>📊 All Clients (<span id="count">0</span>)</h3>
+<div style="overflow-x:auto">
+<table>
+<thead><tr><th>Email</th><th>Capital</th><th>Profit</th><th>Package</th><th>Edit</th></tr></thead>
+<tbody id="usersTable"><tr><td colspan="5">Loading...</td></tr></tbody>
+</table>
+</div>
+</div>
+
+<div class="card" id="editCard" style="display:none">
+<h3>✏️ Edit: <span id="editEmail"></span></h3>
+<input type="hidden" id="editId">
+<label>Capital ($) <input type="number" id="editCapital"></label>
+<label>Profit ($) <input type="number" id="editProfit"></label>
+<label>Package <select id="editPackage"><option value="ordinary">Ordinary</option><option value="premium">Premium</option><option value="vip">VIP</option></select></label>
+<label>Deposit Status <select id="editDepositStatus"><option value="pending">Pending</option><option value="approved">Approved</option><option value="rejected">Rejected</option></select></label>
+<label>Live Chat Reply / Admin Note <textarea id="editNote" rows="3"></textarea></label>
+<button class="btn-save" onclick="saveClient()">💾 SAVE - All devices see instantly</button>
+</div>
+
+<div class="card">
+<h3>💬 Live Chat Messages</h3>
+<div id="chatMessages" style="max-height:250px;overflow-y:auto;background:#0f172a;padding:10px;border-radius:8px">No messages</div>
+</div>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyD19gZda8g45mDo3jRDD_ro80xHjS3vIAU",
+  authDomain: "tradingbotfx-8646f.firebaseapp.com",
+  projectId: "tradingbotfx-8646f",
+  storageBucket: "tradingbotfx-8646f.firebasestorage.app",
+  messagingSenderId: "978322458067",
+  appId: "1:978322458067:web:9a90a1b168aa5fa7f49b26",
+  measurementId: "G-R607VCHEP2"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+let allUsers=[];
+
+db.collection("users").onSnapshot(snap=>{
+  let html=""; allUsers=[];
+  snap.forEach(doc=>{ const d=doc.data(); allUsers.push({id:doc.id,...d}); html+=`<tr><td>${d.email||doc.id.slice(0,8)}</td><td>$${d.capital||d.balance||0}</td><td>$${d.profit||0}</td><td>${d.package||'ordinary'}</td><td><button class="btn-save" onclick="openEdit('${doc.id}')">Edit</button></td></tr>`; });
+  document.getElementById('usersTable').innerHTML = html || '<tr><td colspan=5>No clients yet</td></tr>';
+  document.getElementById('count').textContent = snap.size;
+});
+
+function openEdit(id){ const u=allUsers.find(x=>x.id===id); document.getElementById('editId').value=id; document.getElementById('editEmail').textContent=u.email||id; document.getElementById('editCapital').value=u.capital||u.balance||0; document.getElementById('editProfit').value=u.profit||0; document.getElementById('editPackage').value=u.package||'ordinary'; document.getElementById('editDepositStatus').value=u.depositStatus||'pending'; document.getElementById('editNote').value=u.adminNote||''; document.getElementById('editCard').style.display='block'; }
+function saveClient(){ const id=document.getElementById('editId').value; db.collection("users").doc(id).update({capital:parseFloat(document.getElementById('editCapital').value)||0,balance:parseFloat(document.getElementById('editCapital').value)||0,profit:parseFloat(document.getElementById('editProfit').value)||0,package:document.getElementById('editPackage').value,depositStatus:document.getElementById('editDepositStatus').value,adminNote:document.getElementById('editNote').value,message:document.getElementById('editNote').value,lastUpdated:firebase.firestore.FieldValue.serverTimestamp()}).then(()=>{alert('✅ Saved! Chrome + Safari + Telegram go see am NOW');}); }
+
+db.collection("messages").orderBy("timestamp","desc").limit(20).onSnapshot(snap=>{ let h=""; snap.forEach(doc=>{ const m=doc.data(); h+=`<div style="padding:6px;border-bottom:1px solid #334155"><b>${m.email||'Client'}:</b> ${m.text||m.message}</div>`; }); if(h) document.getElementById('chatMessages').innerHTML=h; });
+</script>
+</body>
+</html>
