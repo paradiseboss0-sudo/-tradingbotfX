@@ -1,0 +1,25 @@
+<!-- BROKER LIVE CHAT - REPLIES INSIDE YOUR ADMIN -->
+<style>
+#tfx-bubble{position:fixed;bottom:22px;right:22px;width:62px;height:62px;background:linear-gradient(135deg,#00ff88,#38bdf8);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:30px;cursor:pointer;z-index:99999;box-shadow:0 8px 25px rgba(0,0,0,.6);animation:pulse 2s infinite}
+@keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.08)}100%{transform:scale(1)}}
+#tfx-box{position:fixed;bottom:95px;right:18px;width:335px;max-width:92vw;height:420px;background:#0f172a;border:1px solid #334155;border-radius:18px;display:none;flex-direction:column;z-index:99999;overflow:hidden;box-shadow:0 15px 40px rgba(0,0,0,.7)}
+#tfx-head{background:linear-gradient(90deg,#00ff88,#38bdf8);color:#000;padding:14px;font-weight:900;display:flex;justify-content:space-between;align-items:center}
+#tfx-msgs{flex:1;overflow-y:auto;padding:12px;background:#060a14}
+#tfx-foot{display:flex;gap:6px;padding:10px;background:#0f172a;border-top:1px solid #334155}
+</style>
+<div id="tfx-bubble" onclick="tfxToggle()">💬</div>
+<div id="tfx-box">
+<div id="tfx-head"><span>💠 TRADINGBOTFX Support</span><span onclick="tfxToggle()" style="cursor:pointer;font-size:18px">✖</span></div>
+<div id="tfx-msgs"><div style="text-align:center;opacity:.7;margin-top:40px">👋 Hi! How can we help you?<br><small>We reply instantly here</small></div></div>
+<div id="tfx-foot"><input id="tfx-in" placeholder="Type your message..." style="flex:1;padding:12px;border-radius:10px;background:#060a14;border:1px solid #334155;color:#fff"><button onclick="tfxSend()" style="background:#00ff88;color:#000;padding:10px 16px;border-radius:10px;border:none;font-weight:900;cursor:pointer">Send</button></div>
+</div>
+<script>
+const tfxCfg={apiKey:"AIzaSyD19gZda8g45mDo3jRDD_ro80xHjS3vIAU",authDomain:"tradingbotfx-8646f.firebaseapp.com",projectId:"tradingbotfx-8646f"};if(!firebase.apps.length)firebase.initializeApp(tfxCfg);const tfxDb=firebase.firestore();
+let tfxId=localStorage.getItem('tfx_chat_id');if(!tfxId){tfxId='guest_'+Date.now()+'_'+Math.random().toString(36).slice(2,5);localStorage.setItem('tfx_chat_id',tfxId);}
+let tfxUnsub=null;
+function tfxToggle(){let b=document.getElementById('tfx-box');b.style.display=b.style.display=='flex'?'none':'flex';if(b.style.display=='flex'){tfxLoad();if(!tfxUnsub){tfxUnsub=tfxDb.collection('clients').doc(tfxId).collection('messages').orderBy('timestamp','asc').onSnapshot(()=>{tfxLoad()});}}}
+async function tfxLoad(){try{let s=await tfxDb.collection('clients').doc(tfxId).collection('messages').orderBy('timestamp','asc').limit(100).get();let h='';s.forEach(d=>{let m=d.data();let isAdmin=m.sender=='admin';h+=`<div style="margin:8px 0;display:flex;${isAdmin?'justify-content:flex-start':'justify-content:flex-end'}"><div style="max-width:78%;padding:10px 12px;border-radius:14px;${isAdmin?'background:#1e293b;border-left:3px solid #00ff88;border-radius:14px 14px 14px 2px':'background:linear-gradient(90deg,#00ff88,#38bdf8);color:#000;border-radius:14px 14px 2px 14px'}"><small style="font-weight:800;display:block;opacity:.7">${isAdmin?'Admin':'You'}</small>${m.text}</div></div>`});document.getElementById('tfx-msgs').innerHTML=h||'<div style="text-align:center;opacity:.7;margin-top:40px">👋 Hi! How can we help?</div>';let el=document.getElementById('tfx-msgs');el.scrollTop=el.scrollHeight;}catch(e){}}
+async function tfxSend(){let t=document.getElementById('tfx-in').value.trim();if(!t)return;document.getElementById('tfx-in').value='';let msgs=document.getElementById('tfx-msgs');msgs.innerHTML+=`<div style="margin:8px 0;display:flex;justify-content:flex-end"><div style="max-width:78%;padding:10px 12px;border-radius:14px 14px 2px 14px;background:linear-gradient(90deg,#00ff88,#38bdf8);color:#000"><small style="font-weight:800;display:block;opacity:.7">You</small>${t}</div></div>`;msgs.scrollTop=msgs.scrollHeight;await tfxDb.collection('clients').doc(tfxId).set({email:tfxId,name:'Live Chat Guest',source:'live-chat',createdAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});await tfxDb.collection('clients').doc(tfxId).collection('messages').add({text:t,sender:'user',timestamp:firebase.firestore.FieldValue.serverTimestamp()});}
+document.getElementById('tfx-in').addEventListener('keypress',e=>{if(e.key==='Enter')tfxSend()});
+</script>
+<!-- END BROKER LIVE CHAT -->
