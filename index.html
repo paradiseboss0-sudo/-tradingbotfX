@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TradingBotFX - Build your future with Investments</title>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial, sans-serif}
+body{background:#080c24;color:#fff;min-height:100vh;overflow-x:hidden;position:relative}
+body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;background-image:radial-gradient(#1a2a5a 1px, transparent 1px);background-size:40px 40px;opacity:.3;z-index:-1}
+header{display:flex;justify-content:space-between;align-items:center;padding:15px 5%;background:rgba(8,12,36,.9);position:sticky;top:0;z-index:100}
+.logo{color:#ffb400;font-weight:900;font-size:18px;letter-spacing:1px;display:flex;align-items:center;gap:6px}
+.logo span{color:#fff}.menu{background:linear-gradient(135deg,#7b61ff,#00d4ff);width:44px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:20px;cursor:pointer}
+.hero{padding:20px 5% 40px;text-align:center;max-width:500px;margin:0 auto}
+.chart-box{background:#0f1330;border-radius:16px;overflow:hidden;border:1px solid #1e2a5a;position:relative;margin:20px 0 30px;box-shadow:0 10px 40px rgba(0,0,0,.5)}
+.chart-box img{width:100%;display:block;height:220px;object-fit:cover;opacity:.9}
+.sell{position:absolute;top:55%;left:15%;background:linear-gradient(135deg,#ff3a2a,#cc0000);color:#fff;padding:10px 22px;border-radius:30px;font-weight:700;font-size:14px;display:flex;align-items:center;gap:6px;box-shadow:0 4px 15px rgba(255,0,0,.4)}
+.buy{position:absolute;top:55%;left:48%;background:linear-gradient(135deg,#00ff88,#00cc66);color:#000;padding:10px 22px;border-radius:30px;font-weight:700;font-size:14px;display:flex;align-items:center;gap:6px;box-shadow:0 4px 15px rgba(0,255,0,.4)}
+.hero h2{color:#00c3ff;font-size:28px;font-weight:800;margin-bottom:6px}
+.hero h1{font-size:30px;line-height:1.2;font-weight:800;margin-bottom:18px}
+.hero p{color:#a0a8c0;font-size:15px;line-height:1.5;margin-bottom:22px}
+.hero .sub{color:#fff;font-size:15px;margin:25px 0}
+.hero .sub span{color:#00c3ff}
+.btns{display:flex;gap:14px;justify-content:center;margin-top:20px}
+.btn-login{background:linear-gradient(135deg,#7b61ff,#00d4ff);color:#fff;padding:14px 32px;border-radius:30px;border:none;font-weight:700;cursor:pointer;font-size:14px}
+.btn-reg{background:transparent;color:#fff;padding:14px 28px;border-radius:30px;border:2px solid #2a3a6a;font-weight:700;cursor:pointer;font-size:14px}
+.how{padding:30px 5%;text-align:left}.how h2{font-size:26px;margin-bottom:20px}
+.popup{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#fff;color:#000;padding:12px 18px;border-radius:10px;z-index:200;display:none;box-shadow:0 10px 30px rgba(0,0,0,.4);width:90%;max-width:340px;font-size:13px;text-align:center}
+</style></head>
+<body>
+<header><div class="logo">↗ TRADINGBOTFX</div><div class="menu" onclick="alert('Menu: Login | Register | Plans')">☰</div></header>
+<div class="hero">
+<div class="chart-box">
+<img src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=600" alt="trading chart">
+<div class="sell">◷ SELL</div><div class="buy">◷ BUY</div>
+</div>
+<h2>TradingBotFX</h2>
+<h1>Build your future with Investments.</h1>
+<p>Discover the power of earning in an increasing cryptocurrency ecosystem.</p>
+<p class="sub">Check Out The Benefits of Joining and <span>•</span> Investing with Us!!</p>
+<div class="btns">
+<button class="btn-login" onclick="location.href='login.html'">LOGIN</button>
+<button class="btn-reg" onclick="location.href='register.html'">REGISTER</button>
+</div>
+</div>
+<div class="how"><h2>How It Works</h2><p style="color:#a0a8c0;font-size:14px;line-height:1.6">1. Register for free<br>2. Choose investment plan<br>3. Deposit funds (BTC/USDT/Bank)<br>4. Watch your profit grow daily<br>5. Withdraw anytime — approved in 24hrs</p></div>
+<div id="pop" class="popup"></div>
+<script>
+const countries=["France","Brazil","USA","Canada","Australia","UK","Nigeria","South Africa","Germany","Japan"];const amounts=["$2,500","$4,200","$5,200","$3,500","$2,800","$1,800","$900","$3,000","$4,000","$6,200"];let i=0;
+function show(){const el=document.getElementById('pop');el.innerHTML=`Someone from <b>${countries[i%10]}</b> has <b>withdrawn</b> <span style="color:green;font-weight:700">${amounts[i%10]}</span>`;el.style.display='block';setTimeout(()=>el.style.display='none',4000);i++;}setInterval(show,10000);setTimeout(show,2000);
+</script>
+
+<!-- BROKER LIVE CHAT - INSIDE YOUR ADMIN -->
+<style>
+#tfx-bubble{position:fixed;bottom:22px;right:22px;width:60px;height:60px;background:linear-gradient(135deg,#7b61ff,#00d4ff);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;cursor:pointer;z-index:99999;box-shadow:0 8px 25px rgba(0,0,0,.6)}
+#tfx-box{position:fixed;bottom:90px;right:15px;width:330px;max-width:92vw;height:410px;background:#0f1330;border:1px solid #2a3a6a;border-radius:16px;display:none;flex-direction:column;z-index:99999;overflow:hidden}
+#tfx-head{background:linear-gradient(90deg,#7b61ff,#00d4ff);color:#fff;padding:13px;font-weight:900;display:flex;justify-content:space-between}
+#tfx-msgs{flex:1;overflow-y:auto;padding:12px;background:#080c24}
+#tfx-foot{display:flex;gap:6px;padding:10px;background:#0f1330;border-top:1px solid #2a3a6a}
+</style>
+<div id="tfx-bubble" onclick="tfxToggle()">💬</div>
+<div id="tfx-box">
+<div id="tfx-head"><span>💠 Support</span><span onclick="tfxToggle()" style="cursor:pointer">✖</span></div>
+<div id="tfx-msgs"><div style="text-align:center;opacity:.7;margin-top:30px">👋 Hi! How can we help?</div></div>
+<div id="tfx-foot"><input id="tfx-in" placeholder="Type message..." style="flex:1;padding:11px;border-radius:10px;background:#080c24;border:1px solid #2a3a6a;color:#fff"><button onclick="tfxSend()" style="background:#7b61ff;color:#fff;padding:10px 14px;border-radius:10px;border:none;font-weight:900;cursor:pointer">Send</button></div>
+</div>
+<script>
+const tfxCfg={apiKey:"AIzaSyD19gZda8g45mDo3jRDD_ro80xHjS3vIAU",authDomain:"tradingbotfx-8646f.firebaseapp.com",projectId:"tradingbotfx-8646f"};if(!firebase.apps.length)firebase.initializeApp(tfxCfg);const tfxDb=firebase.firestore();
+let tfxId=localStorage.getItem('tfx_chat_id');if(!tfxId){tfxId='guest_'+Date.now()+'_'+Math.random().toString(36).slice(2,4);localStorage.setItem('tfx_chat_id',tfxId);}
+function tfxToggle(){let b=document.getElementById('tfx-box');b.style.display=b.style.display=='flex'?'none':'flex';if(b.style.display=='flex')tfxLoad();}
+async function tfxLoad(){let s=await tfxDb.collection('clients').doc(tfxId).collection('messages').orderBy('timestamp','asc').limit(100).get();let h='';s.forEach(d=>{let m=d.data();let admin=m.sender=='admin';h+=`<div style="margin:7px 0;display:flex;${admin?'justify-content:flex-start':'justify-content:flex-end'}"><div style="max-width:78%;padding:9px 11px;border-radius:12px;${admin?'background:#1e2a5a;color:#fff':'background:linear-gradient(135deg,#7b61ff,#00d4ff);color:#fff'}">${m.text}</div></div>`});document.getElementById('tfx-msgs').innerHTML=h||'👋 Hi! How can we help?';document.getElementById('tfx-msgs').scrollTop=9999;}
+async function tfxSend(){let t=document.getElementById('tfx-in').value.trim();if(!t)return;document.getElementById('tfx-in').value='';await tfxDb.collection('clients').doc(tfxId).set({email:tfxId,name:'Live Chat Guest',source:'live-chat',createdAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});await tfxDb.collection('clients').doc(tfxId).collection('messages').add({text:t,sender:'user',timestamp:firebase.firestore.FieldValue.serverTimestamp()});tfxLoad();}
+document.getElementById('tfx-in').addEventListener('keypress',e=>{if(e.key==='Enter')tfxSend()});
+tfxDb.collection('clients').doc(tfxId).collection('messages').orderBy('timestamp','asc').onSnapshot(()=>{let b=document.getElementById('tfx-box');if(b.style.display=='flex')tfxLoad();});
+</script>
+<!-- END CHAT -->
+
+</body></html>
