@@ -1,0 +1,48 @@
+<!-- FILE: login.html - LOGIN PAGE -->
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Login - TradingBotFX</title>
+<style>*{margin:0;padding:0;box-sizing:border-box;font-family:Arial}body{background:#e8ecf1;display:flex;justify-content:center;padding:20px 0}
+.box{background:#fff;width:95%;max-width:380px;border-radius:4px;padding:25px 20px;text-align:center}
+.logo{background:#000;color:#ffb400;padding:4px 8px;display:inline-block;font-weight:900;font-size:14px;margin-bottom:15px}
+.orange{background:#d67e0a;color:#fff;padding:10px;border-radius:4px;width:100%;border:none;margin:8px 0;cursor:pointer}
+input{width:100%;border:none;border-bottom:1px solid #ccc;padding:12px 0;margin:6px 0;outline:none;font-size:14px}
+.dark{background:#0a0e3a;color:#fff;padding:12px;border-radius:4px;width:100%;border:none;margin:8px 0;cursor:pointer}
+.red{background:#a00;color:#fff;padding:12px;border-radius:4px;width:100%;border:none;margin:8px 0;cursor:pointer}
+.overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.6);z-index:100;align-items:center;justify-content:center}
+.modal{background:#fff;padding:30px 20px;border-radius:10px;text-align:center;width:90%;max-width:320px}
+</style></head>
+<body>
+<div class="box">
+<div class="logo">TRADINGBOTFX</div>
+<p style="font-size:12px">The TradingBotFX Investment Platform.<br><b>INVEST and Start EARNING</b></p>
+<button class="orange" onclick="location.href='index.html'">🏠 Back To Homepage</button>
+<button class="orange" onclick="location.href='register.html'">Register Now</button>
+<h3 style="margin:20px 0 5px">Login to your account</h3>
+<p style="font-size:11px;color:#666">Don't have an account? <a href="register.html" style="color:#d67e0a">Sign Up Free!</a></p>
+<input id="email" type="email" placeholder="Email address">
+<input id="password" type="password" placeholder="Password">
+<div style="text-align:left;margin:10px 0;font-size:12px"><input type="checkbox" checked style="width:auto"> Remember me</div>
+<button id="loginBtn" class="dark">Login Now</button>
+<button class="red" onclick="alert('Contact admin paradiseboss99@gmail.com to reset')">Reset Password</button>
+</div>
+<div id="overlay" class="overlay"><div class="modal"><h2 style="color:green">Login Successful</h2><p style="margin:12px 0;font-size:13px">You have successfully logged in to your account, Please hold a little while...</p><div style="font-size:24px">⏳</div></div></div>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+const firebaseConfig = { apiKey:"AIzaSyD19gZda8g45mDo3jRDD_ro8z4Zy1G5wKQ", authDomain:"tradingbotfx-8646f.firebaseapp.com", projectId:"tradingbotfx-8646f", storageBucket:"tradingbotfx-8646f.firebasestorage.app", messagingSenderId:"978322458067", appId:"1:978322458067:web:9a9a1b168a3c4d5e6f7a8b9" };
+const app=initializeApp(firebaseConfig);const db=getFirestore(app);
+document.getElementById('loginBtn').addEventListener('click', async()=>{
+  const email=document.getElementById('email').value.trim();const password=document.getElementById('password').value;
+  if(!email||!password){alert("Enter email and password");return;}
+  const btn=document.getElementById('loginBtn');btn.innerText="Checking...";btn.disabled=true;
+  try{
+    const q=query(collection(db,"clients"), where("email","==",email));const snap=await getDocs(q);
+    if(snap.empty){alert("Account not found, please register");btn.innerText="Login Now";btn.disabled=false;return;}
+    let user=null; snap.forEach(d=>{user=d.data();});
+    localStorage.setItem('tradingbotfx_user', JSON.stringify(user));
+    document.getElementById('overlay').style.display='flex';
+    setTimeout(()=>{location.href='dashboard.html';},1500);
+  }catch(e){alert(e.message);btn.innerText="Login Now";btn.disabled=false;}
+});
+</script></body></html>
