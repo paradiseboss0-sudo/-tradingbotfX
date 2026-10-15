@@ -1,0 +1,54 @@
+<!-- FILE: register.html - REGISTRATION PAGE - CREATE THIS FILE -->
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Register - TradingBotFX</title>
+<style>*{margin:0;padding:0;box-sizing:border-box;font-family:Arial}body{background:#e8ecf1;display:flex;justify-content:center;padding:20px 0}
+.box{background:#fff;width:95%;max-width:380px;border-radius:4px;padding:25px 20px;text-align:center}
+.logo{background:#000;color:#ffb400;padding:4px 8px;display:inline-block;font-weight:900;font-size:14px;margin-bottom:15px}
+.orange{background:#d67e0a;color:#fff;padding:10px;border-radius:4px;width:100%;border:none;margin:8px 0;cursor:pointer;font-size:13px}
+input,select{width:100%;border:none;border-bottom:1px solid #ccc;padding:12px 0;margin:6px 0;outline:none;font-size:14px;background:transparent}
+select{border:1px solid #ccc;border-radius:4px;padding:8px}
+</style></head>
+<body>
+<div class="box">
+<div class="logo">TRADINGBOTFX</div>
+<p style="font-size:12px">The TradingBotFX Investment Platform.<br><b>INVEST and Start EARNING</b></p>
+<button class="orange" onclick="location.href='index.html'">🏠 Back To Homepage</button>
+<button class="orange">Register Now</button>
+<h3 style="color:#d67e0a;margin:18px 0 10px">Sign up for free!</h3>
+<input id="fullName" placeholder="Full name">
+<input id="email" type="email" placeholder="Email address">
+<input id="mobile" placeholder="Mobile Number">
+<select id="country"><option value="">Select Country</option><option>Nigeria</option><option>USA</option><option>UK</option><option>South Africa</option><option>France</option><option>Canada</option><option>Germany</option><option>Others</option></select>
+<select id="currency"><option value="">Select Currency</option><option>USD</option><option>EUR</option><option>GBP</option><option>NGN</option><option>BTC</option></select>
+<input id="occupation" placeholder="Occupation">
+<input id="password" type="password" placeholder="Password">
+<input id="confirmPassword" type="password" placeholder="Confirm Password">
+<div style="text-align:left;margin:12px 0;font-size:11px"><input type="checkbox" id="agree" style="width:auto"> I agree to the <a href="#" style="color:#d67e0a">privacy policy and terms of service</a></div>
+<button id="signupBtn" class="orange">Sign Up Now</button>
+<p style="margin-top:10px;font-size:12px"><a href="login.html" style="color:#d67e0a;text-decoration:none">Already have an Account ?</a></p>
+</div>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+const firebaseConfig = { apiKey:"AIzaSyD19gZda8g45mDo3jRDD_ro8z4Zy1G5wKQ", authDomain:"tradingbotfx-8646f.firebaseapp.com", projectId:"tradingbotfx-8646f", storageBucket:"tradingbotfx-8646f.firebasestorage.app", messagingSenderId:"978322458067", appId:"1:978322458067:web:9a9a1b168a3c4d5e6f7a8b9" };
+const app=initializeApp(firebaseConfig);const db=getFirestore(app);
+document.getElementById('signupBtn').addEventListener('click', async ()=>{
+  const fullName=document.getElementById('fullName').value.trim();
+  const email=document.getElementById('email').value.trim();
+  const mobile=document.getElementById('mobile').value.trim();
+  const country=document.getElementById('country').value;
+  const currency=document.getElementById('currency').value;
+  const occupation=document.getElementById('occupation').value.trim();
+  const password=document.getElementById('password').value;
+  const confirm=document.getElementById('confirmPassword').value;
+  if(!fullName||!email||!mobile||!country||!currency||!password){alert("Fill all fields");return;}
+  if(password!==confirm){alert("Passwords not match");return;}
+  const btn=document.getElementById('signupBtn');btn.disabled=true;btn.innerText="Creating...";
+  try{
+    await addDoc(collection(db,"clients"),{fullName,email,phone:mobile,country,currency,occupation,password,plan:"Starter - $100",capital:0,profit:0,total:0,package:"ordinary",status:"active",createdAt:serverTimestamp(),date:new Date().toISOString()});
+    localStorage.setItem('tradingbotfx_user', JSON.stringify({fullName,email,mobile,country,capital:0,profit:0,package:"ordinary"}));
+    alert("✅ Account Created!");location.href="dashboard.html";
+  }catch(e){alert("Error: "+e.message);btn.disabled=false;btn.innerText="Sign Up Now";}
+});
+</script></body></html>
