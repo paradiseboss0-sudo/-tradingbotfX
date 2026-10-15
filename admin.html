@@ -1,0 +1,34 @@
+<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>TRADINGBOTFX PRO ADMIN</title><script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script><style>
+*{box-sizing:border-box}body{margin:0;background:#060a14;color:#fff;font-family:'Segoe UI',Arial;padding:12px;background:radial-gradient(circle at top,#1a2a4a,#060a14)}h1{text-align:center;background:linear-gradient(90deg,#00ff88,#38bdf8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-size:22px;margin:8px}.glass{background:rgba(30,41,59,0.8);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:14px;margin:12px 0;box-shadow:0 10px 30px rgba(0,0,0,0.4)}.badge{display:inline-block;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:bold}.ok{background:#00ff88;color:#000}.info{background:#38bdf8;color:#000}input,select{width:100%;padding:12px;border-radius:10px;background:#0f172a;border:1px solid #334155;color:#fff;margin:6px 0;outline:none}input:focus{border-color:#00ff88}button{padding:11px 16px;border-radius:10px;border:none;font-weight:800;cursor:pointer;transition:.2s}button:active{transform:scale(.96)}.g{background:linear-gradient(90deg,#00ff88,#00ff88cc);color:#000}.b{background:linear-gradient(90deg,#38bdf8,#818cf8);color:#000}.r{background:linear-gradient(90deg,#f43f5e,#ec4899);color:#fff}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}@media(max-width:600px){.grid{grid-template-columns:1fr}}.client-card{border-left:4px solid #00ff88;animation:fade .4s ease}@keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+</style></head><body>
+<h1>💠 TRADINGBOTFX PRO ADMIN</h1>
+<div class="glass" style="text-align:center">Live Clients: <b id="cnt" style="font-size:20px;color:#00ff88">0</b> | <span id="st" class="badge info">Connecting...</span> <br><br><button class="b" onclick="loadPro()">🔄 Refresh All</button></div>
+<div id="list"></div>
+<script>
+const cfg={apiKey:"AIzaSyD19gZda8g45mDo3jRDD_ro80xHjS3vIAU",authDomain:"tradingbotfx-8646f.firebaseapp.com",projectId:"tradingbotfx-8646f",storageBucket:"tradingbotfx-8646f.firebasestorage.app",messagingSenderId:"978322458067",appId:"1:978322458067:web:9a90a1b168aa5fa7f49b26"};firebase.initializeApp(cfg);const db=firebase.firestore();
+async function loadPro(){
+ let all=[];let html='';document.getElementById('st').innerText='Scanning clients & users...';
+ for(let col of ['clients','users']){
+  try{let s=await db.collection(col).get();s.forEach(d=>all.push({id:d.id,col:col,data:d.data()}));}catch(e){}
+ }
+ document.getElementById('cnt').innerText=all.length;
+ if(!all.length){document.getElementById('list').innerHTML='<div class=glass>❌ No clients found. Check Firestore Data tab.</div>';document.getElementById('st').innerText='No data';return;}
+ all.sort((a,b)=>(b.data.createdAt?.seconds||0)-(a.data.createdAt?.seconds||0));
+ all.forEach(o=>{
+  let d=o.data;let cap=d.capital??d.balance??0;let prof=d.profit??0;
+  html+=`<div class="glass client-card" style="border-left-color:${o.col=='clients'?'#00ff88':'#38bdf8'}">
+  <div style="display:flex;justify-content:space-between"><b>📧 ${d.email||o.id}</b><span class="badge ${o.col=='clients'?'ok':'info'}">${o.col}</span></div>
+  <small style="opacity:.7">${d.name||'No name'} | ${d.phone||''} | ${o.id.slice(0,10)}...</small>
+  <div class="grid" style="margin-top:10px"><div>💰 Capital $<input id="cap_${o.id}" type="number" value="${cap}"></div><div>📈 Profit $<input id="prof_${o.id}" type="number" value="${prof}"></div></div>
+  <div class="grid"><div>Package<select id="pkg_${o.id}"><option>${d.package||'ordinary'}</option><option>ordinary</option><option>Starter $100</option><option>Silver $500</option><option>Gold $1000</option><option>Platinum $5000</option></select></div><div>Status<select id="sta_${o.id}"><option>${d.status||'active'}</option><option>active</option><option>pending</option><option>blocked</option></select></div></div>
+  <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap"><button class="g" onclick="savePro('${o.col}','${o.id}')">💾 Save</button><button class="b" onclick="approvePro('${o.col}','${o.id}')">✅ Approve</button><button class="r" onclick="chatPro('${o.col}','${o.id}')">💬 Chat</button></div>
+  <div id="chat_${o.id}" style="margin-top:10px"></div></div>`;
+ });
+ document.getElementById('list').innerHTML=html;document.getElementById('st').innerText='✅ LIVE - '+all.length+' clients';document.getElementById('st').className='badge ok';
+}
+function savePro(col,id){let cap=parseFloat(document.getElementById('cap_'+id).value)||0;let prof=parseFloat(document.getElementById('prof_'+id).value)||0;let pkg=document.getElementById('pkg_'+id).value;let sta=document.getElementById('sta_'+id).value;db.collection(col).doc(id).update({capital:cap,balance:cap,profit:prof,package:pkg,status:sta,lastUpdated:firebase.firestore.FieldValue.serverTimestamp()}).then(()=>{alert('✅ '+col+'/'+id+' Saved $'+cap+' Profit $'+prof);loadPro();}).catch(e=>alert(e.message));}
+function approvePro(col,id){db.collection(col).doc(id).update({status:'active',approved:true,approvedAt:firebase.firestore.FieldValue.serverTimestamp()}).then(()=>alert('✅ Approved '+id));}
+async function chatPro(col,id){let box=document.getElementById('chat_'+id);box.innerHTML='<div class=glass style="padding:8px"><input id="msg_'+id+'" placeholder="Reply to client..."><button class=b onclick="sendPro(\''+col+'\',\''+id+'\')" style="margin-top:6px;width:100%">Send Reply</button><div id="msgs_'+id+'">Loading...</div></div>';try{let s=await db.collection(col).doc(id).collection('messages').orderBy('timestamp','desc').limit(15).get();let h='';s.forEach(m=>{let d=m.data();h+=`<div style="background:#0f172a;padding:8px;border-radius:8px;margin:6px 0"><b>${d.sender||'user'}:</b> ${d.text||''}<br><small style="opacity:.5">${d.timestamp?new Date(d.timestamp.toDate()).toLocaleTimeString():''}</small></div>`});document.getElementById('msgs_'+id).innerHTML=h||'No messages yet';}catch(e){document.getElementById('msgs_'+id).innerHTML='No messages yet';}}
+function sendPro(col,id){let t=document.getElementById('msg_'+id).value;if(!t)return;db.collection(col).doc(id).collection('messages').add({text:t,sender:'admin',timestamp:firebase.firestore.FieldValue.serverTimestamp()}).then(()=>{document.getElementById('msg_'+id).value='';chatPro(col,id);});}
+loadPro();
+</script></body></html>
