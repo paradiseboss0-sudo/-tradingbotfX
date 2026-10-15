@@ -1,0 +1,50 @@
+<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>TRADINGBOTFX SUPER ADMIN - CLIENTS</title><script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script><style>body{background:#0b1220;color:#fff;font-family:Arial;padding:10px}h2{color:#00ff88;text-align:center}.card{background:#1e293b;padding:12px;border-radius:12px;margin:10px 0;border:1px solid #334155}input,select{width:100%;padding:10px;margin:6px 0;border-radius:8px;background:#0f172a;color:#fff;border:1px solid #475569}button{padding:10px 14px;border:none;border-radius:8px;font-weight:bold;cursor:pointer;margin:3px}.green{background:#00ff88;color:#000}.blue{background:#38bdf8;color:#000}.red{background:#ef4444;color:#fff}.row{display:flex;gap:8px;flex-wrap:wrap}.client{border-left:4px solid #00ff88}</style></head><body>
+<h2>🔥 TRADINGBOTFX SUPER ADMIN 🔥<br><small style="font-size:12px">Collection: clients - Shows ALL Yesterday & Today</small></h2>
+<div class="card"><b>Live Clients: <span id="count">0</span></b> | <span id="status">Connecting...</span><br><button class="blue" onclick="load()">🔄 Refresh</button> <button class="green" onclick="location.reload()">Reload Page</button></div>
+<div id="list"></div>
+<script>
+const firebaseConfig={apiKey:"AIzaSyD19gZda8g45mDo3jRDD_ro80xHjS3vIAU",authDomain:"tradingbotfx-8646f.firebaseapp.com",projectId:"tradingbotfx-8646f",storageBucket:"tradingbotfx-8646f.firebasestorage.app",messagingSenderId:"978322458067",appId:"1:978322458067:web:9a90a1b168aa5fa7f49b26"};
+firebase.initializeApp(firebaseConfig);const db=firebase.firestore();
+async function load(){
+ document.getElementById('status').innerText='Loading clients collection...';
+ try{
+  let snap=await db.collection('clients').orderBy('createdAt','desc').get().catch(async ()=>await db.collection('clients').get());
+  document.getElementById('count').innerText=snap.size;
+  document.getElementById('status').innerText='✅ Connected - Found '+snap.size;
+  let html='';
+  if(snap.empty){html='<div class=card>❌ No clients in clients collection. Check Firestore.</div>';}
+  snap.forEach(doc=>{
+   let d=doc.data();
+   let email=d.email||doc.id;
+   let cap=d.capital||d.balance||0;
+   let prof=d.profit||0;
+   let name=d.name||'No name';
+   let phone=d.phone||'';
+   html+=`<div class="card client">
+   <b>📧 ${email}</b><br><small>${name} | ${phone} | ID: ${doc.id}</small><br><br>
+   <div class=row><div style="flex:1">Capital $<input id="cap_${doc.id}" type="number" value="${cap}"></div><div style="flex:1">Profit $<input id="prof_${doc.id}" type="number" value="${prof}"></div></div>
+   Package: <select id="pkg_${doc.id}"><option>${d.package||'Starter'}</option><option>Starter $100</option><option>Silver $500</option><option>Gold $1000</option><option>Platinum $5000</option></select>
+   Status: <select id="stat_${doc.id}"><option>${d.status||'active'}</option><option>active</option><option>pending</option><option>blocked</option></select>
+   <div class=row style="margin-top:8px"><button class=green onclick="save('${doc.id}')">💾 Save Capital/Profit</button><button class=blue onclick="approve('${doc.id}')">✅ Approve Deposit</button><button class=red onclick="chat('${doc.id}')">💬 Reply Chat</button></div>
+   <div id="chat_${doc.id}" style="margin-top:8px"></div>
+   </div>`;
+  });
+  document.getElementById('list').innerHTML=html;
+ }catch(e){document.getElementById('status').innerText='❌ Error: '+e.message;document.getElementById('list').innerHTML='<div class=card>Error: '+e.message+'<br>Make sure Rules are: allow read,write: if true;</div>';}
+}
+function save(id){
+ let cap=parseFloat(document.getElementById('cap_'+id).value)||0;
+ let prof=parseFloat(document.getElementById('prof_'+id).value)||0;
+ let pkg=document.getElementById('pkg_'+id).value;
+ let stat=document.getElementById('stat_'+id).value;
+ db.collection('clients').doc(id).update({capital:cap,balance:cap,profit:prof,package:pkg,status:stat,lastUpdated:firebase.firestore.FieldValue.serverTimestamp()}).then(()=>alert('✅ Saved for '+id+' - Capital $'+cap+' Profit $'+prof)).catch(e=>alert(e.message));
+}
+function approve(id){db.collection('clients').doc(id).update({status:'active',approved:true,approvedAt:firebase.firestore.FieldValue.serverTimestamp()}).then(()=>alert('✅ Deposit Approved for '+id)).catch(e=>alert(e.message));}
+async function chat(id){
+ let box=document.getElementById('chat_'+id);
+ box.innerHTML='<input id="msg_'+id+'" placeholder="Type reply to client..."><button class=blue onclick="sendChat(\''+id+'\')">Send</button><div id="msgs_'+id+'">Loading messages...</div>';
+ try{let snap=await db.collection('clients').doc(id).collection('messages').orderBy('timestamp','desc').limit(10).get();let h='';snap.forEach(m=>{let md=m.data();h+=`<div style="background:#0f172a;padding:6px;margin:4px 0;border-radius:6px"><b>${md.sender||'client'}:</b> ${md.text||md.message||''}<br><small>${md.timestamp?new Date(md.timestamp.toDate()).toLocaleString():''}</small></div>`});document.getElementById('msgs_'+id).innerHTML=h||'No messages yet';}catch(e){document.getElementById('msgs_'+id).innerHTML='No chat collection yet - client need send message first';}
+}
+function sendChat(id){let txt=document.getElementById('msg_'+id).value;if(!txt)return;db.collection('clients').doc(id).collection('messages').add({text:txt,sender:'admin',from:'admin',timestamp:firebase.firestore.FieldValue.serverTimestamp()}).then(()=>{alert('Message sent!');document.getElementById('msg_'+id).value='';chat(id);});}
+load();
+</script></body></html>
